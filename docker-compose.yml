@@ -1,0 +1,39 @@
+version: '2'
+
+services:
+  web:
+    build: docker/web
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8888:80"
+    networks:
+      - laraquiz
+
+  app:
+    build: docker/app
+    volumes:
+      - ./:/var/www
+    networks:
+      - laraquiz
+
+  redis:
+    image: redis
+    networks:
+      - laraquiz
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: laraquiz
+      MYSQL_USER: laraquiz
+      MYSQL_PASSWORD: secret
+    ports:
+      - "33061:3306"
+    networks:
+      - laraquiz
+
+networks:
+  laraquiz:
+    driver: "bridge"
